@@ -28,16 +28,11 @@ module.exports = function (grunt) {
     coffee: {
       dist: {
         options: {
-          sourceMap: true,
-          sourceRoot: '',
-          join: true
+          sourceMap: true
         },
-        files: [{
-          cwd: '<%= config.src %>',
-          src: '**/*.coffee',
-          dest: '<%= config.dist %>',
-          ext: 'js'
-        }]
+        files: {
+          '<%= config.dist %>/galaxy.js': '<%= config.src %>/**/*.coffee'
+        }
       }
     },
   });

@@ -5,17 +5,15 @@
     "Stefan Novak <novast@ohsu.edu>"
   ],
   "description": "Galaxy services in Angular",
+  "main": ["dist/galaxy.js", "galaxy.js.map"],
   "keywords": [
     "angular",
     "galaxy"
   ],
   "license": "MIT",
   "ignore": [
-    "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests",
     "src"
   ],
   "dependencies": {
