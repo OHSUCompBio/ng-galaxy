@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('galaxy', ['Restangular', 'ngLodash']);
+  angular.module('galaxy', ['restangular', 'ngLodash']);
 
   'use strict';
 

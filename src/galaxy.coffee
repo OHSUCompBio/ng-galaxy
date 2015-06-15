@@ -1,5 +1,5 @@
 'use strict'
 
 angular.module 'galaxy', [
-    'Restangular',
+    'restangular',
     'ngLodash']
