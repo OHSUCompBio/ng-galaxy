@@ -1,13 +1,13 @@
 'use strict'
 
 angular.module 'galaxy'
-  .factory 'libraries', ['Restangular', 'galaxy', (Restangular, Galaxy) ->
+  .factory 'Libraries', ['Galaxy', (Galaxy) ->
 
-    Restangular.extendModel('libraries', (library) ->
-      library.permissions = -> Galaxy.service('permissions', dataset)
+    Galaxy.extendModel 'libraries', (library) ->
+      library.permissions = Galaxy.service('permissions', library)
+      library.contents = Galaxy.service('contents', library)
 
       library
-    )
 
     Galaxy.service('libraries')
   ]

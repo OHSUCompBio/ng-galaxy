@@ -1,11 +1,14 @@
 {
-  "name": "angular-galaxy",
+  "name": "ng-galaxy",
   "version": "0.0.0",
   "authors": [
     "Stefan Novak <novast@ohsu.edu>"
   ],
   "description": "Galaxy services in Angular",
-  "main": ["dist/galaxy.js", "galaxy.js.map"],
+  "main": [
+    "dist/galaxy.js",
+    "galaxy.js.map"
+  ],
   "keywords": [
     "angular",
     "galaxy"

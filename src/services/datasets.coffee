@@ -1,10 +1,14 @@
 'use strict'
 
 angular.module 'galaxy'
-  .factory 'datasets', ['Restangular', 'galaxy', (Restangular, Galaxy) ->
+  .factory 'Datasets', ['Galaxy', (Galaxy) ->
 
-    Restangular.extendModel 'datasets', (dataset) ->
-      dataset.history = -> Restangular.one('histories', dataset.history_id)
+    # Galaxy.extenCollection 'datasets', (dataset) ->
+    #   datasets.search = (uuids...) ->
+    #     Galaxy.service("search").post(
+
+    Galaxy.extendModel 'datasets', (dataset) ->
+      dataset.history = Galaxy.one('histories', dataset.history_id)
 
       # TODO: Add dataset.contents
 

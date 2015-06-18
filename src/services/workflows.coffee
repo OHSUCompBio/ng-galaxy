@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module 'galaxy'
-  .factory 'workflow', ['galaxy', 'Restangular', (Galaxy, Restangular) ->
+  .factory 'Workflow', ['Galaxy', (Galaxy) ->
 
     Galaxy.extendModel 'workflows', (workflow) ->
       workflow.invocations = Galaxy.service('invocations', workflow)
