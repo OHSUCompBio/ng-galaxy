@@ -1,7 +1,8 @@
 {
   "name": "ng-galaxy",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "authors": [
+    "Stefan Novak <stefan@novak.io>",
     "Stefan Novak <novast@ohsu.edu>"
   ],
   "description": "Galaxy services in Angular",
