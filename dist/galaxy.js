@@ -68,6 +68,9 @@
             content: dataset.id
           }, 'contents');
         };
+        history.contents = function() {
+          return history.customGET('contents');
+        };
         return history;
       });
       return Galaxy.service('histories');
@@ -129,7 +132,6 @@
             tool_id: tool.id
           };
           payload = _.assign(payload, _.pick(options, configArguments));
-          window.payload = options;
           payload.inputs = _.chain(options).omit(configArguments).map(function(value, property) {
             var input;
             input = _.find(tool.inputs, {
@@ -155,9 +157,7 @@
             } else {
               return [[property, value]];
             }
-          }).flatten().tap(function(o) {
-            return window.foo = o;
-          }).zipObject().value();
+          }).flatten().zipObject().value();
           return Galaxy.service('tools').post(payload);
         };
         return tool;

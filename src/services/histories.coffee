@@ -16,6 +16,9 @@ angular.module 'galaxy'
       history.addDataset = (dataset, source='library') ->
         history.customPOST source: source, content: dataset.id, 'contents'
 
+      history.contents = ->
+        history.customGET 'contents'
+
       return history
 
     Galaxy.service('histories')
