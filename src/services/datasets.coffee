@@ -9,5 +9,7 @@ angular.module 'galaxy'
       dataset.download = ->
         dataset.customGET 'download'
 
+      return dataset
+
     Galaxy.service('datasets')
   ]
