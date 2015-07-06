@@ -8,7 +8,9 @@
     'Galaxy', function(Galaxy) {
       Galaxy.extendModel('datasets', function(dataset) {
         dataset.history = Galaxy.one('histories', dataset.history_id);
-        return dataset;
+        return dataset.download = function() {
+          return dataset.customGET('download');
+        };
       });
       return Galaxy.service('datasets');
     }
