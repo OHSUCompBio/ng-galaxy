@@ -7,7 +7,9 @@
   angular.module('galaxy').factory('Datasets', [
     'Galaxy', function(Galaxy) {
       Galaxy.extendModel('datasets', function(dataset) {
-        dataset.history = Galaxy.one('histories', dataset.history_id);
+        if (dataset.history_id != null) {
+          dataset.history = Galaxy.one('histories', dataset.history_id);
+        }
         dataset.download = function() {
           return dataset.customGET('download');
         };
@@ -82,6 +84,14 @@
 
   'use strict';
 
+  angular.module('galaxy').factory('Jobs', [
+    'Galaxy', function(Galaxy) {
+      return Galaxy.service('jobs');
+    }
+  ]);
+
+  'use strict';
+
   angular.module('galaxy').factory('Libraries', [
     'Galaxy', function(Galaxy) {
       Galaxy.extendModel('libraries', function(library) {
@@ -125,7 +135,7 @@
           return tool.customGET('diagnostics', options);
         };
         tool.run = function(options) {
-          var configArguments, payload;
+          var configArguments, payload, renderInput;
           if (options == null) {
             options = {};
           }
@@ -135,32 +145,46 @@
             tool_id: tool.id
           };
           payload = _.assign(payload, _.pick(options, configArguments));
-          payload.inputs = _.chain(options).omit(configArguments).map(function(value, property) {
-            var input;
-            input = _.find(tool.inputs, {
-              name: property
-            });
-            if (input.type === 'repeat' && Array.isArray(value)) {
-              return _.chain(value).map(function(repeatedInstance, index) {
-                return _.chain(repeatedInstance).map(function(obj) {
-                  return _.map(obj, function(propertyValue, propertyName) {
-                    return _.assign(propertyValue, {
-                      __propertyName: propertyName
-                    });
-                  });
-                }).flatten().groupBy('__propertyName').map(function(collectionValue, collectionName) {
-                  return [
-                    "" + property + "_" + index + "|" + collectionName, {
-                      batch: true,
-                      values: collectionValue
-                    }
-                  ];
-                }).value();
-              }).flatten().value();
-            } else {
-              return [[property, value]];
+          renderInput = function(name, value, input) {
+            var batch;
+            if (input == null) {
+              input = _.find(tool.inputs, {
+                name: name
+              });
             }
-          }).flatten().zipObject().value();
+            switch (input.type) {
+              case 'repeat':
+                return _.chain(value).thru(function(value) {
+                  return [value];
+                }).flatten().map(function(valueInstance, index) {
+                  return _.chain(valueInstance).map(function(propertyValue, propertyName) {
+                    var nestedInput;
+                    nestedInput = _.find(input.inputs, {
+                      name: propertyName
+                    });
+                    return renderInput(propertyName, propertyValue, nestedInput);
+                  }).map(function(propertyValue, propertyName) {
+                    return ["" + name + "_" + index + "|" + propertyName, propertyValue];
+                  }).value();
+                }).flatten().zipObject().value();
+              case 'data':
+                batch = value.batch || false;
+                value = _.omit(value, 'batch');
+                return _.chain(value.values).thru(function(values) {
+                  return {
+                    batch: batch,
+                    values: values
+                  };
+                }).thru(function(properties) {
+                  return [[name, properties]];
+                }).zipObject().value();
+            }
+          };
+          payload.inputs = _.chain(options).omit(configArguments).map(function(values, property) {
+            return renderInput(property, values);
+          }).thru(function(inputs) {
+            return _.merge.apply(_, inputs);
+          }).value();
           return Galaxy.service('tools').post(payload);
         };
         return tool;
